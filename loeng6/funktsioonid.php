@@ -42,24 +42,16 @@
   
       //sulgen päringu
       $stmt->close();
-  
-      $stmt = $conn->prepare("SELECT id FROM vr20_photos WHERE filename = ?");
-      $stmt->bind_param("s", $photoUp->failinimi);
-      $stmt->bind_result($photoidFromDB);
-      $stmt->execute();
-      echo($stmt->error);
-      $stmt->fetch();
-      $stmt->close();
     }
 
     $response = null;
     //valmistame ette SQL päringu
-    $stmt = $conn->prepare("INSERT INTO vr20_uudised (userid, title, content, photoid) VALUES (?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO vr20_uudised (userid, title, content, photoid) VALUES (?, ?, ?, (SELECT LAST_INSERT_ID()))");
     echo $conn->error;
 
     //seome andmed päringuga
     // i - integer, s - string, d - decimal
-    $stmt->bind_param("issi", $userid, $uudisePealkiri, $uudiseSisu, $photoidFromDB);
+    $stmt->bind_param("iss", $userid, $uudisePealkiri, $uudiseSisu);
 
     if ($stmt->execute()) $response = 1; else $response = 0; echo $stmt->error;
 
