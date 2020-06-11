@@ -4,6 +4,8 @@ let captionText;
 let photoId;
 let photoDir = "../../uploadNormalPhoto/";
 
+let avatudPildiDivElement;
+
 
 window.onload = function() {
   modal = document.getElementById("modalArea");
@@ -24,6 +26,7 @@ window.onload = function() {
 }
 
 function openModal(e) {
+  avatudPildiDivElement = e.target;
   modalImg.src = photoDir + e.target.dataset.fn;
   modalImg.alt = e.target.alt;
   captionText.innerHTML = e.target.alt;
@@ -34,10 +37,16 @@ function openModal(e) {
 
 function closeModal() {
   modal.style.display = "none";
+
+  document.getElementById("avgRating").innerHTML = "";
+  
+  document.getElementById("rate" + rating).checked = false;
 }
 
+
+let rating;
 function storeRating() {
-  let rating = 0;
+  rating = 0;
   for (let i = 1; i <= 5; i++) {
     if (document.getElementById("rate" + i).checked) rating = document.getElementById("rate" + i).value;
   }
@@ -49,6 +58,7 @@ function storeRating() {
       if (this.readyState == 4 && this.status == 200) {
         //mis teha javascriptis, kui ajax on edukas
         document.getElementById("avgRating").innerHTML = "Keskmine hinne: " + this.responseText;
+        avatudPildiDivElement.parentElement.lastElementChild.innerHTML = "Hinne: " + this.responseText;
       }
     };
     webRequest.open("GET", "storePhotoRating.php?rating=" + rating + "&photoId=" + photoId, true);

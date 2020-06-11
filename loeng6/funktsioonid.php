@@ -43,6 +43,7 @@
       //sulgen päringu
       $stmt->close();
     }
+    // var_dump($conn->insert_id);
 
     $response = null;
     //valmistame ette SQL päringu
@@ -221,11 +222,14 @@
       $piltideArv += 1;
       if ($piltideArv == 4) break;
 
+      if ($photoRatingFromDB == 0) $photoRatingFromDB = "Hinded puuduvad";
+      else $photoRatingFromDB = "Hinne: " . round($photoRatingFromDB, 2);
+
       $thumbnailDir = "../../thumbnail/";
       $normalPhotoDir = "../../uploadNormalPhoto/";
       $response .= '<div class="pilt">' . "\n\t\t";
       $response .= '<img data-id="' . $photoidFromDB . '" data-fn="' . $filenameFromDB . '" src="' . $thumbnailDir . $filenameFromDB . '">'  . "\n\t\t" . '<br>';
-      $response .= $userFirstnameFromDB . " " . $userLastnameFromDB . "\n\t<br>Hinne:" . round($photoRatingFromDB, 2) . "\n\t" . '</div>' . "\n\t";
+      $response .= $userFirstnameFromDB . " " . $userLastnameFromDB . "\n\t<br><span>" . $photoRatingFromDB . "</span>\n\t" . '</div>' . "\n\t";
     }
 
     if (!$response) $response = '<div class="pilt" style="height: 140.8px">Pilte pole</div>';
